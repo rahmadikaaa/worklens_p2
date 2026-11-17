@@ -1,0 +1,26 @@
+# Sensitive internal source data (Q-S6). Never commit.
+*.xlsx
+*.xlsm
+*.xls
+*.csv
+*.pkl
+/data/
+/source/
+/uploads/
+/scratch/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Environments and build output
+.venv/
+venv/
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+dist/
+build/
+*.log
