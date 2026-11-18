@@ -27,7 +27,10 @@ Cells that are blank in a non-empty row are stored as `blank` cells so a row is 
 | Origin | `origin_kind`: `entered` (no formula) or `workbook_derived_cached` (formula present) |
 | External dependencies | Never fetched or evaluated (Q-S2) |
 
-## 3. Three kinds of values (Confirmed principle, Proposed mechanism)
+## 3. Kinds of values (Confirmed principle, Proposed mechanism)
+
+Only the first two kinds live in `raw`. Two more kinds exist elsewhere: `l1_authored` (in the `assessment` layer) and `ai_generated` (in `audit`). `DOMAIN_MODEL.md` §4 lists all five. The table below covers the three kinds relevant to the source and metrics.
+
 
 | Kind | Label in storage | Source |
 |---|---|---|
@@ -72,5 +75,5 @@ A different SHA-256 is a different workbook. It gets its own `source_workbook`, 
 
 ## 8. Unresolved
 
-- Q-D1: archive the AL:BI region cells in `raw`, or manifest-only (proposed: manifest-only)?
-- Q-D2: where the source file lives for runs (configured path outside the repo is proposed).
+- Q-D1: **decided (`0007`, GT-4): manifest-only.** AL:BI cells are not stored in `raw`.
+- Q-D2: **decided (`0007`, GT-4):** the source is read from a configured local path (`WORKLENS_SOURCE_FILE`). The workbook stays where it is (git-ignored, in the repo root). The earlier "outside the repo" proposal is superseded.

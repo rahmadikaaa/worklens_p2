@@ -1,4 +1,4 @@
-# Module Contracts
+﻿# Module Contracts
 
 Status: **Proposed.** Module list and separation are **Confirmed** (Kiroween brief). Signatures below are illustrative design notation, not code, and not final. Each contract states purpose, inputs, outputs, errors, and what the module must not do.
 
@@ -10,8 +10,9 @@ foundation/               shared, reusable; knows nothing about WorkLens
   adapters/  ai/  audit/  reporting/  notifications/
 worklens/
   backend/                WorkLens application (FastAPI), WorkLens modules
-    workload/  scoring/  impact/  analytics/
+    workload/  scoring/  impact/  analytics/      (the four WorkLens modules; gated)
     sources/              WorkLens source-to-domain mapping, row classes
+    assessment/ review/ followup/ exports/        (application services, not modules; section 3.6)
   frontend/               Next.js app
 docs/
 ```
@@ -99,13 +100,42 @@ Rules:
 - **Purpose:** WorkLens-specific glue: the 36-header spec, approved-hash registry, ingestion window A:AJ, row-class rules RC/RU, validation catalog, mapping v1.
 - **Consumes:** foundation ingestion, normalization, rules, audit.
 
+### 3.6 WorkLens application services (Proposed; not modules; placement is Q-R23)
+
+Behavior required by the Reference (Q50, Q51) that none of the 14 modules owns. They sit in the WorkLens backend on top of the modules and the `assessment` schema. All are gated by the items in `ROADMAP.md` and are not built in Phases 3 or 4.
+
+| Service | Purpose | Input | Output | Must not |
+|---|---|---|---|---|
+| `assessment` | Create new versions of AssessmentRecord; serve the effective view; enforce ValueCatalog values | L1 edit request with author and capability `assessment.edit` | New version, audit event (ids and field names only), effective view | Write to `raw` or `domain`; set values on behalf of AI; allow Management edits; set `Done` automatically |
+| `review` | Record L1 dispositions of findings and inconsistencies | Finding or inconsistency reference, L1 decision | QualityReviewItem version, audit event | Alter or delete findings; auto-correct source values |
+| `followup` | Manage follow-up items and `action_by` | L1 edit request | FollowUpItem version, audit event | Assume L0/L2 workflows beyond `action_by` (Q44) |
+| `exports` | Build the Enriched CSV and the Assessment Report projections | Capability check, selection, run ids | File plus manifest (columns with value kinds, run ids, hashes); audit event | Present workbook-derived or assumed values as WorkLens-derived or measured; emit unescaped spreadsheet formula characters; export without the capability check |
+
+Errors for all four: `PermissionDenied`, `CatalogViolation`, `Conflict` (stale version), `NotEligible` (when an eligibility rule exists).
+
+## 3a. MVP capabilities and modules (Q50; reference-stated, Proposed mapping)
+
+The module list is unchanged. The six MVP capabilities from `REQUIREMENTS_RECONCILIATION_Q1_Q51.md` are consumers of the modules above:
+
+| Capability | Modules | Contract note |
+|---|---|---|
+| Assessment Workspace (L1) | Ingestion output, Logging & Audit, `assessment` application service (3.6) | Edits go to a separate attributed, versioned assessment layer. No module writes to `raw`. Structure unresolved (Q-R8, Q-R13) |
+| Monitoring Dashboard (Management) | Workforce Analytics (read-only) | Section 3.4 allows counts of ingestion results only. Counts on business fields (status, category) may need approved definitions (Q-R17) |
+| Download Enriched CSV | Reporting Engine | **Sequencing conflict:** Reporting Engine is Deferred to Phase 10 (2.9). Content of "enrichment" undefined (Q-R14). Export must label source, workbook-derived, L1-authored and WorkLens-derived values and respect role permissions |
+| Generate Assessment Report | Reporting Engine, optional Report Generation agent | Same conflict (Q-R15, Q-R16) |
+| Quality Review | Rules Engine findings plus L1 disposition records | Findings flag for L1 review; never auto-correct (Q18) |
+| Follow-up Management | `followup` application service (3.6) | No shared-module counterpart; data model deferred in the reference |
+
+Not changed: the Workload Calculation Engine stays gated (3.1). Q37/Q38 state a definition but the gate items are incomplete (Q-R3). The 10% `Workload after` assumption must not feed the Impact Assessment Engine as measured impact.
+
 ## 4. What Phase 3 needs (Proposed minimum)
 
 | Needed | Module |
 |---|---|
-| Yes | Configuration, Data Ingestion + Excel adapter, Normalization, Rules (classification and validation), Logging & Audit |
-| Defer | Assessment, AI Provider, Reporting, Notification, generic plugin loading |
-| Gated | All four WorkLens calculation/analytics modules |
+| Phase 3 | Configuration, Data Ingestion + Excel `SourceAdapter`, Rules (classification and validation), Logging & Audit, and the `sources` code |
+| Phase 4 | Normalization Engine, with mapping v1 |
+| Defer | Assessment, AI Provider, Reporting (needed earlier by the CSV and report capabilities, Q-R16), Notification, the adapter registry and dynamic plugin loading |
+| Gated | The four WorkLens modules and the application services in 3.6 |
 
 ## 5. Contract testing (Proposed)
 

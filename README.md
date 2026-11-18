@@ -6,7 +6,7 @@ Business question: **"What should we automate, and how much impact can we achiev
 
 ## Status
 
-Phase 2 (design only) deliverables are ready for owner review. There is no application code, database, API, or UI yet. This is a clean rebuild; the previous implementation is legacy and not used.
+The Phase 2 design baseline (data dictionary, domain model, architecture) is ready for owner review; open decisions are gates in `docs/ROADMAP.md`. There is no application code, database, API, or UI yet. This is a clean rebuild; the previous implementation is legacy and not used.
 
 ## Start here
 
@@ -25,6 +25,11 @@ Phase 2 (design only) deliverables are ready for owner review. There is no appli
 | `docs/PHASE2_PROPOSAL.md` | Original Phase 2 proposal (approved; superseded by the deliverables below) |
 | `docs/DECISIONS/0005-technology-stack.md` | Stack evaluation and hosting trade-offs |
 | `docs/design/` | Mapping, provenance, row classification, module contracts, API, schema, security, testing |
+| `docs/REQUIREMENTS_RECONCILIATION_Q1_Q51.md` | Business requirements reference (Q1–Q51) reconciled with the design; unresolved questions |
+| `docs/AGENT_HARNESS_ARCHITECTURE.md` | Development vs. runtime agent harness (design only) |
+| `docs/DEVELOPMENT_AGENT_HARNESS.md` | Governance of coding agents: roles, gates, evidence |
+| `docs/RUNTIME_AGENT_HARNESS.md` | Hybrid orchestrator and candidate business agents |
+| `docs/AGENT_GOVERNANCE_AND_SECURITY.md` | Permissions, audit, failure handling, versioning |
 | `docs/METRIC_DEFINITION_WORKSHOP.md` | Candidate metrics and approval template (nothing approved) |
 
 The source workbook is sensitive internal data. It is excluded by `.gitignore` and must not be committed to a public repository.

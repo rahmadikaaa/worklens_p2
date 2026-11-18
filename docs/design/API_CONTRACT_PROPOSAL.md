@@ -10,7 +10,7 @@ Status: **Proposed. No endpoint exists.** FastAPI produces an OpenAPI document; 
 - Idempotency: `POST` imports are idempotent per `(sha256, sheet, extractor_version, config_hash)`; a repeat returns the existing run with `200` and `X-Idempotent-Replay: true`.
 - Versioning: breaking changes get `/api/v2`. Contract tests compare against the committed OpenAPI file.
 - Source values are exposed only by endpoints marked **[values]**, which require authorization and are never logged.
-- Authentication and authorization are **Unresolved (Q-T7)**. Proposed MVP: bind to localhost and require a configured bearer token; role split `viewer` (counts and metadata), `inspector` (source values), `admin` (trigger imports).
+- **Phase 3 model approved (`0007`, GT-3):** bind to localhost; one bearer token per role from environment configuration; capability checks; `/health` unauthenticated. Per-user identities and the L1/Management role mapping stay **Unresolved (Q-T7, Q-R12)**. Earlier proposal: bind to localhost and require a configured bearer token; role split `viewer` (counts and metadata), `inspector` (source values), `admin` (trigger imports).
 
 ## 2. Endpoints
 
@@ -41,7 +41,7 @@ Phase = the roadmap phase in which the endpoint would first be built. Nothing be
 | `POST /ai/recommendations`, `GET /ai/recommendations/{id}` | Reviewable AI recommendations | 9 | Gated; stored as `AiOutput` |
 | `GET /audit/events` | Audit trail | 3 | `admin`; no values |
 
-Not proposed: any endpoint that edits or deletes raw data, accepts a file path, or uploads a workbook (upload is **Unresolved**, Q-D2; a new workbook version enters through configuration and re-verification).
+Not proposed: any endpoint that edits or deletes raw data, accepts a file path, or uploads a workbook (no upload in v1, decided in `0007` GT-4; a new workbook version enters through configuration and re-verification).
 
 ## 3. Example shapes (illustrative)
 
@@ -69,6 +69,28 @@ Values shown are the Phase 1 golden counts; real responses are computed per run.
 - Every endpoint documents auth role, errors, and whether it returns source values.
 - Frontend types are generated from OpenAPI, not hand-written.
 
+## 4a. Requirements alignment, Q1–Q51 (reference-stated; additions are Proposed, not approved)
+
+Source: `REQUIREMENTS_RECONCILIATION_Q1_Q51.md`. The role set above does not match the reference:
+
+- Reference roles: **L1** (edits assessment, `Improvement Category`, `Category Notes`, Quality Review, Follow-up) and **Management** (read-only; summary plus drill-down; comments undecided).
+- Section 1 proposes `viewer`, `inspector`, `admin`, and the statement that no endpoint edits data. Neither expresses L1 edit rights. **Conflict, not resolved** (Q-R12). Candidate mappings: (a) `l1`, `management`, `admin`; (b) keep `viewer`/`inspector`/`admin` and add an assessment-edit permission for L1. Management drill-down shows source values, so it needs activity-detail read access under the sensitivity rules.
+- **Capability model (Proposed, `ARCHITECTURE.md` §6):** endpoints check capabilities (`activity.read_summary`, `activity.read_detail`, `assessment.edit`, `quality_review.edit`, `followup.edit`, `export.csv`, `report.generate`, `agent.review`, `source.import`, `source.inspect_meta`, `admin.config`). Role names are configuration, so the unresolved role mapping does not block Phase 3. In section 1, read `viewer`, `inspector` and `admin` as provisional role names for this mapping.
+- "Not proposed: any endpoint that edits or deletes raw data" still holds. L1 edits would target a separate assessment layer.
+
+Candidate endpoint groups implied by the six MVP capabilities. Names and shapes are placeholders, none exist, none are approved, and they are not scheduled before Phase 3 decisions:
+
+| Capability | Candidate group | Access (reference) |
+|---|---|---|
+| Assessment Workspace | read and update assessment records per activity | L1 edit; Management read |
+| Monitoring Dashboard | summary and drill-down reads | L1, Management read |
+| Download Enriched CSV | export | Roles open (Q-R14); sensitive data; audit; protect against spreadsheet formula injection in exported cells |
+| Generate Assessment Report | create and read report | Open (Q-R15) |
+| Quality Review | list findings, record L1 disposition | L1 edit |
+| Follow-up Management | list, create, update follow-up items | L1 edit; Management read |
+
+Edits must record the author and version, and never alter `raw`. The system of record for assessments is unresolved (Q-R13).
+
 ## 5. Unresolved
 
-Q-T7 (users, auth), Q-D2 (workbook upload), whether `/rows` values should be masked by default in the UI.
+Q-R12, Q-R13, Q-R14, Q-T7 beyond the Phase 3 minimum (per-user identities; Phase 3 model approved in `0007` GT-3), whether `/rows` values should be masked by default in the UI.

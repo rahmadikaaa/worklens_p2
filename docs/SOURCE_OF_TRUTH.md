@@ -195,6 +195,10 @@ Notes:
 | Q-S2 to Q-S6 | Approved |
 | Source-to-domain mapping | Not started (Phase 2 proposal) |
 
+## 8a. Related requirements reference (not a source)
+
+The owner's business-requirements reference (`Workload_Enrichment_Tanya_Jawab_Q1-Q51`, reconciled in `REQUIREMENTS_RECONCILIATION_Q1_Q51.md`) names the workbook `DUMMY L1 AGIT.xlsx`. It is a requirements reference, **not a data source**. The pinned workbook above remains the only source of truth. Its statement that source files stay immutable and that enrichment and corrections must not change the source (section G.8) is consistent with Q-S decisions. Whether `DUMMY` is a structural stand-in for the pinned file is unconfirmed (Q-R22).
+
 ## 9. Re-verification trigger
 
 Any file whose SHA-256 differs from the approved hash must be re-verified before use: identity, sheet existence, headers, counts, anomalies, and a comparison against this document. A different hash never inherits approval.

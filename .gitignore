@@ -24,3 +24,6 @@ __pycache__/
 dist/
 build/
 *.log
+
+# Task evidence for the development agent harness (local only, never tracked)
+.agents/tasks/

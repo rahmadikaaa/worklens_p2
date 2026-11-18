@@ -14,7 +14,7 @@ Phase: **Phase 2 (design only) deliverables prepared; no application code exists
 
 ## Legacy rule
 
-The previous WorkLens repository (`C:\Users\rahma\OneDrive\Documents\worklens`) and related folders are LEGACY.
+The previous WorkLens repository (`C:\Users\rahma\OneDrive\Documents\worklens\`) and related folders are LEGACY.
 
 - Read-only reference for requirements and history. Never modify them.
 - Never copy code, schemas, migrations, ingestion pipelines, calculation logic, or derived results.
@@ -54,9 +54,47 @@ No workload calculation (including `Duration × Event Per Month`) may be impleme
 
 Strong typing and schema validation; automated tests; config via environment variables; no secrets in code or logs; structured logging; migration discipline; API documentation; reproducible local setup.
 
+## Global agent workflow
+
+### Simplicity first
+
+Before proposing a design, recommending infrastructure, or changing code, load and follow the `ponytail` skill.
+
+### Stay in scope
+
+Read a file before planning changes to it. Do not add features or changes nobody asked for.
+
+### Keep it simple
+
+Use the `caveman` skill to minimize unnecessary complexity, scope expansion, and verbose communication.
+
+### Verify before done
+
+A change is done only when it is verified where it runs:
+
+1. Run `npm run lint` when applicable.
+2. Check every "done means" criterion of the task against the running or deployed app, where applicable.
+3. Run the relevant tests and other verification commands required by the project or task.
+4. If a check fails, fix the cause and run all applicable checks again.
+5. Report unavailable or inapplicable checks explicitly. Never invent results or create unnecessary scripts solely to satisfy a check.
+
+### Report in Show Me style
+
+When done, read `.agents/skills/show-me/SKILL.md` and follow it.
+
+Show what changed, then every check you ran with its command and result. Use appropriate visual explanations, diagrams, component flows, or comparisons where they materially help explain the result. Keep the report concise and evidence-based.
+
 ## Documentation rules
 
 Every doc item is labeled one of: **Confirmed**, **Proposed**, **Unresolved**, **Implemented**, **Deferred**. Never describe a proposal as implemented. Update `docs/IMPLEMENTATION_STATUS.md` with every change in capability.
+
+## Development agent harness
+
+Coding agents follow `docs/DEVELOPMENT_AGENT_HARNESS.md` (approved in `docs/DECISIONS/0007-gate-decisions-gt1-gt5.md`). That document defines the roles, task tiers T0–T3, approval gates G1–G10, evidence requirements and reviewer policy. Read it before starting a task; its rules are not repeated here. Task evidence stays local in `.agents/tasks/` (git-ignored). Points that always apply:
+
+- Review, testing and verification run in a different session than the implementation. T2 and T3 tasks require the manual two-session workflow.
+- Report a test as passed only with its command, exit code and output. Report failures as failures. Never skip, delete or weaken a test to make it pass without G1 approval.
+- Agents read real source values only under gate G10. The default is no access.
 
 ## Approval gates
 

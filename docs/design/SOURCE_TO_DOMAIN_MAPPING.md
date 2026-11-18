@@ -1,8 +1,8 @@
 # Source-to-Domain Mapping (all 36 columns)
 
-Status: **Proposed.** Field names, types and mapping rules are design proposals. Column **meanings** are **Unresolved** and are not interpreted here.
+Status: **Proposed.** Field names, types and mapping rules are design proposals (mapping version 1). This mapping is mechanical: it moves values, it does not interpret them. Column **meanings** and their statuses (Confirmed, Reference, Unresolved) are in `DATA_DICTIONARY.md`; unresolved meanings do not block the mapping.
 
-Source: `SOP L1 AGIT.xlsx`, sheet `Breakdown Activity`, header row 1, ingestion window **A:AJ** (Q-S5 excludes AL:BI). Counts come from `DATA_DICTIONARY.md`.
+Source: `SOP L1 AGIT.xlsx`, sheet `Breakdown Activity`, header row 1, ingestion window **A:AJ** (Q-S5 excludes AL:BI). Counts come from `DATA_DICTIONARY.md`. Built in Phase 4 (normalization); `raw` capture of A:AJ happens in Phase 3.
 
 ## Mapping rules (Proposed)
 
@@ -15,6 +15,8 @@ Source: `SOP L1 AGIT.xlsx`, sheet `Breakdown Activity`, header row 1, ingestion 
 7. **Blank cells** map to NULL. Empty string and whitespace-only text are preserved as-is in raw; in domain they map to NULL only for empty string, and whitespace-only text is kept as text and flagged (V-codes).
 8. **Link-only rows** do not produce ActivityRecords. They produce a LinkRecord holding the column I value.
 9. **Provenance fields** on every domain row: `raw_row_id`, `excel_row`, `import_run_id`, `normalization_run_id`, `mapping_version`.
+10. **Source mirror is never edited.** The fields below mirror the workbook (`entered` or `workbook_derived_cached`). L1 decisions about the same concepts (`improvement_category`, `category_notes`, `tools_automation`, `assessment_status`, and others) are stored in the `assessment` layer as `l1_authored` values (`DOMAIN_MODEL.md` §6). The mirror field and the L1 field are different fields and are shown together in the effective view, each with its kind label.
+11. **Values are not conformed.** Values that differ from the Reference's target categories (for example `Old Dismantled`, `Not Possible Automate`, numeric `0` in column AD) are preserved as they are. They produce validation findings (flag-only), never corrections (Reference Q17, Q18).
 
 ## Column mapping
 
@@ -60,6 +62,10 @@ Types: `text`, `numeric` (PostgreSQL `double precision` to preserve the stored d
 | AJ | Module AO | `module_ao` | text | n/a (empty in all rows) | Keep the field; empty in this version |
 
 Empty-in-this-version columns (AE, AF, AJ) are kept so the mapping stays complete and future workbook versions are accepted by re-verification, not by silent schema change.
+
+## L1-authored fields (not mapped from the workbook; Proposed)
+
+These have no source column and are stored only in the `assessment` layer: `reasoning`, `information_gaps`, `l2_feedback`, `l2_support_needed` (Reference Q5, Q7, Q11), and follow-up items. Whether the empty columns AE `Confirmation Tower/L2` and AF `Support Needed` should be used instead is Unresolved (Q-R8); they remain mirrored as empty source fields either way.
 
 ## Not mapped
 

@@ -15,7 +15,7 @@ Status: sensitivity rules from Q-S6 are **Confirmed**. Everything else is **Prop
 | Area | Control |
 |---|---|
 | Repository | `.gitignore` excludes spreadsheets, CSV, `data/`, `source/`, `uploads/`, `.env`. A pre-commit check blocks staged files with those extensions and scans staged text for known workbook identifiers such as file paths and link host names. Repo stays private until the owner decides otherwise |
-| Source file | Configured path outside the repo (`WORKLENS_SOURCE_FILE`); read-only open; hash verified before any read; unknown hash refused |
+| Source file | Configured path (`WORKLENS_SOURCE_FILE`); per `0007` (GT-4) the file stays in place (git-ignored, in the repo root) and is never moved, copied or uploaded; read-only open; hash verified before any read; unknown hash refused |
 | Secrets | Environment variables or local secret store; `.env.example` has keys only; no secrets in logs or images |
 | Logging | Structured JSON; a redaction filter drops fields named like values; allow-list approach (row, column, count, code). Exceptions are wrapped so messages carry no cell values |
 | Database | Separate owner and app roles; app role no UPDATE/DELETE on `raw`; TLS if the DB is remote; backups encrypted and kept local |

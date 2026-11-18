@@ -1,6 +1,6 @@
 # 0005 — Technology stack
 
-Status: stack candidates **Confirmed as design baseline** by the owner. Final adoption is **Proposed** (this record) and needs owner approval. Hosting is **Unresolved**. No implementation is authorized.
+Status: stack candidates **Confirmed as design baseline** by the owner. **Adoption approved on 2026-11-17 (`0007`, GT-1):** Option A, the library list below, stdlib JSON logging and a pytest-based import-boundary check. Hosting is **Unresolved**. Version pins are decided in the Phase 3 plan (GT-6). No implementation is authorized until Phase 3 is approved. The evaluation text below is unchanged.
 
 ## Baseline candidates (owner-approved for evaluation)
 

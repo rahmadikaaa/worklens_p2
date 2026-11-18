@@ -82,6 +82,39 @@ Observation, not a rule: the workbook contains formulas for M, N and O (`K*L`, `
 ### Users and decisions
 19. Who uses the outputs and which decisions do they support (Q-B11)?
 
+## 4a. Requirements reference (Q1–Q51) — status of candidates and questions
+
+Source: `REQUIREMENTS_RECONCILIATION_Q1_Q51.md`. The reference is owner-stated but self-described as "bukan spesifikasi final". **Nothing below is approved**; no formula is finalized.
+
+| Item | What the reference says | Effect on the workshop | Still open |
+|---|---|---|---|
+| C-02 Activity workload | Q37/Q38: total monthly workload for one activity = `Durasi (Menit)` × `Event Per Month`, minutes/month | Option (a) is now the owner-stated definition. It is not approved: the gate items below remain | Handling of text values (`30 menit`, `N/A`, `Quarterly`, `30/31`), zero events (1,630 rows), missing values and `#N/A`; aggregation; versioning; acceptance criteria (Q-R3) |
+| C-04 / C-05 After automation | Q39/Q40: `Durasi after`/`Workload after` is an estimate; static assumption `Workload after` = 10% of `Workload` before, for all activities; not measured; can be ignored for now | **Answers question 16:** it is an assumption, not a measurement. It must not be used as measured impact (C-11). The workbook formulas (`N = K×(1/10)`, `O = N×L`) are structurally consistent with it; not recalculated | Whether and when to use it at all (Q47 does not prioritize workload before/after) |
+| C-06 / C-07 Workload reduction | Q41: the saving formula already exists in project artifacts; do not reconstruct it | The C-06/C-07 options in section 3 were my discussion options. They are not the project's formula and must not be adopted in place of the existing artifact, which decides | Identify the artifact (Q-R2) |
+| C-08 Automation coverage | Q21–Q24: `Automation/Manual` is actual condition; Automation includes non-AO and partial automation | Questions 10 partly answered | `AO` label meaning (Q-R6); `Take Out` (Q-R19) |
+| C-09 / C-10 Opportunity and priority | Q1, Q15: L1 evaluates opportunity with L2 feedback and tool availability; no scoring or prioritization criteria given | Opportunity is an L1 decision recorded in `Improvement Category`/`Category Notes`. No scoring criteria exist | Scoring, weights, and whether in MVP (Q-R16) |
+| C-11 Realized impact | Not addressed; Q39 says the 10% is not measured | Remains unresolved. No measured post-automation data identified | Source of actuals |
+| C-12 Capacity | Not addressed | Unchanged | |
+| C-13 Data completeness | Q7, Q8, Q18 | Supports reporting completeness and flagged inconsistencies | Eligibility (Q-B12) |
+
+Business questions in section 4 now answered or partly answered by the reference:
+
+| Question | Reference | State |
+|---|---|---|
+| 1 What does one row represent | Q3: one activity | Reference-stated; confirm (Q-R1) |
+| 4 Unit of duration | Q38: result in minutes/month; header says minutes | Reference-stated for the result unit |
+| 5 Meaning of `Event Per Month` | Q38 uses it as events per month in the formula; text values not addressed | Partial |
+| 9 Which status/category is current | Q19: AD corrects W | Partial; `Status` vs `Status (Old)` not addressed |
+| 10 Meaning of `AO`, `As Is`, `Dismantled`, `Take Out`, etc. | Q12–Q16, Q21–Q24 | Partial; `AO` label, `Take Out`, `Old/New Dismantled`, `0` open |
+| 11 Which columns form the assessment | Q11 | Partial (Q-R8) |
+| 12 Eligibility, unreviewed rows | Q2, Q7, Q9 | Open (Q-R10) |
+| 6 Workload per what, time window | Q37: per activity, per month | Partial; other groupings and windows not addressed |
+| 8 Treatment of `#N/A` and blanks | Q18: flag for L1 review, do not auto-correct source | Partial; effect on metrics open |
+| 14 What is an automation opportunity | Q1, Q15: L1 evaluates; recorded via `Improvement Category`/`Category Notes` | Partial; no criteria |
+| 16 Is the 10% an assumption, target or measurement | Q39/Q40 | **Answered: static assumption, not measured** |
+| 19 Users and decisions | Q48, Q49, Q51 | Reference-stated: L1 edits and decides; Management monitors, read-only |
+| 2, 3, 7, 13, 15, 17, 18 | Not addressed | Open |
+
 ## 5. Missing data (observed)
 
 - Post-automation measured durations and event counts: not in the workbook.

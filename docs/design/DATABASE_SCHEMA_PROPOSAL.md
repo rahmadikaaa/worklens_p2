@@ -52,8 +52,19 @@ Current-run pointers: a `current_runs` view selects the latest succeeded run per
 
 ## 5. `audit` schema
 
-**audit_event**: `id bigint`; `occurred_at timestamptz`; `actor text`; `action text`; `entity_type text`; `entity_id text`; `detail jsonb` (no source values); append-only.
+**audit_event**: `id bigint`; `occurred_at timestamptz`; `actor text`; `actor_type text` check in (`user`,`system`,`agent`); `action text`; `entity_type text`; `entity_id text`; `task_id uuid null` (runtime agent task, unused until Track H2); `detail jsonb` (no source values); append-only. (`actor_type` and `task_id` added in the Phase 2 finalization so Phase 3 does not need a later change; Proposed, with P13 in `0006`.)
 **ai_output** (Deferred): request hash, model, provider, redaction applied, output text, reviewer, review status.
+
+## 5a. `assessment` schema (Proposed; description only; not scheduled; gated)
+
+Source: `DOMAIN_MODEL.md` §6, Reference Q11, Q12, Q20, Q50, Q51. Not built in Phases 3 or 4. Field lists below are provisional until the gates GT-8 and GT-9 in `ROADMAP.md` are decided.
+
+- **Common to every table:** versioned, append-only history (new version = new row, no UPDATE or DELETE); `created_by`, `created_at`, `change_reason`; reference to `raw.raw_row`; the app role has INSERT and SELECT only. A `current` view selects the latest version. Values are `l1_authored`.
+- **value_catalog** and entries: catalog name and version, allowed values, status. Contents Unresolved (Q-R4, Q-R5, Q-R7, Q-R9).
+- **assessment_record**: activity reference; `improvement_category`, `category_notes`, `tools_automation`, `reasoning`, `information_gaps`, `l2_feedback`, `l2_support_needed`, `assessment_status` (catalog-checked where a catalog exists). Field set subject to Q-R8.
+- **quality_review_item**: reference to a validation finding or a named inconsistency; state (catalog); note.
+- **follow_up_item**: activity reference; `action_by`; description; status (catalog); coordination note.
+- No column in `raw` or `domain` is ever updated by this layer. Identity across workbook versions (Q-R24) and the effective view (Q-R25) are Unresolved; they affect views, not the tables above.
 
 ## 6. Immutability and integrity controls
 
@@ -65,6 +76,6 @@ Current-run pointers: a `current_runs` view selects the latest succeeded run per
 
 ## 7. Open points
 
-- Q-T8: how the database is provisioned for local dev (dedicated database and role on the existing local PostgreSQL service, or another approach). Needs the owner's approval before touching the existing service.
-- Q-D1: whether to archive the excluded AL:BI region in raw.
+- Q-T8: **approved in principle (`0007`, GT-2):** dedicated databases and roles on the existing local PostgreSQL 17 service. **Provisioning is not authorized**; the owner reviews the exposure finding in `0007` first.
+- Q-D1: **decided (`0007`, GT-4): manifest-only.** The AL:BI region is not archived in `raw`.
 - Q-B1 may rename or reshape `activity_record`.
